@@ -16,17 +16,25 @@
 
 # shutil.make_archive('backend/app/storage/download','zip','backend/app/storage/temp_download')
 
-import io,os,zipfile
+# import io,os,zipfile
 
-path = 'backend/app/storage/temp_download'
+# path = 'backend/app/storage/temp_download'
 
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file), 
-                       os.path.relpath(os.path.join(root, file), 
-                                       os.path.join(path, '..')))
+# def zipdir(path, ziph):
+#     # ziph is zipfile handle
+#     for root, dirs, files in os.walk(path):
+#         for file in files:
+#             ziph.write(os.path.join(root, file), 
+#                        os.path.relpath(os.path.join(root, file), 
+#                                        os.path.join(path, '..')))
 
-with zipfile.ZipFile('Python.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
-    zipdir(path, zipf)
+# with zipfile.ZipFile('Python.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+#     zipdir(path, zipf)
+
+import os
+
+DOWNLOAD_DIR = "./backend/app/storage/temp_download"
+
+if os.listdir(DOWNLOAD_DIR):
+    # os.rmdir(os.listdir(DOWNLOAD_DIR))
+    print("ล้างไฟล์ในโฟลเดอร์ดาวน์โหลด")

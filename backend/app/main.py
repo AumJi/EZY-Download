@@ -14,6 +14,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5500",
     "http://127.0.0.1:5500",
+    "http://localhost:3000",
     "http://127.0.0.1:8000",
 ]
 
@@ -49,7 +50,7 @@ def download_images_with_extension(query, limit, extension=None, output_dir="dow
             adult_filter_off=True,
             force_replace=False,
             filter=extension,
-            timeout=60
+            timeout=1
         )
 
         print(f"ดาวน์โหลดเสร็จสิ้น: {query} ({limit} รูปภาพ)")
@@ -70,12 +71,17 @@ def zipdir(path, ziph):
 
 
 # ตั้งค่าโฟลเดอร์ดาวน์โหลด
+STORAGE_PATH = "./backend/app/storage"
 DOWNLOAD_DIR = "./backend/app/storage/temp_download"
-os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+DOWNLOAD_ZIP = "./backend/app/storage/download.zip"
 
 @app.post("/api/download")
-async def download_images(request: Item):
+def download_images(request: Item):    
         try:
+            if os.listdir(STORAGE_PATH):
+                shutil.rmtree(STORAGE_PATH)
+            os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+            
             # ตัวอย่างการใช้งาน
             lst = [i.strip() for i in request.title.split(',')]
             for i in lst:
@@ -89,21 +95,14 @@ async def download_images(request: Item):
                             os.rename(os.path.join(folder_path,j),os.path.join(folder_path,j.split('.')[0]+ request.type))
 
             shutil.make_archive('backend/app/storage/download','zip',DOWNLOAD_DIR)
-            zip_file = "backend/app/storage/download.zip"
-            # zip_buffer = io.BytesIO()
-
-            # with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            #     zipdir(DOWNLOAD_DIR, zipf)
-
-            # zip_buffer.seek(0)
 
             return FileResponse(
-                path=zip_file,
+                path=DOWNLOAD_ZIP,
                 media_type="application/zip",
                 # headers={"Content-Disposition": f"attachment; filename={'download'}.zip"}
                 filename="download.zip"
             )
-            
+
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
