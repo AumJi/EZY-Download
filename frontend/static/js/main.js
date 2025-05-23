@@ -1,3 +1,8 @@
+const notyf = new Notyf({duration: 1500,
+    position: {x: 'right',y: 'top'},
+    ripple: true,
+});
+
 const downloadForm = document.querySelector('#download-form');
 const title = document.querySelector('#image-name');
 const type = document.querySelector('#file-extension');
@@ -20,11 +25,8 @@ downloadForm.addEventListener('submit', async (event) => {
         amount: amount.value
     };
 
-    if (
-    data.title.replace(" ", "").split(",").length < 6 &&
-    data.title.replace(" ", "").split(",").length * data.amount <= 100
+    if (data.title.replace(" ", "").split(",").length * data.amount <= 100
   ) {
-
     try {
         const response = await fetch('http://127.0.0.1:8000/api/download', {
             method: 'POST',
@@ -67,11 +69,14 @@ downloadForm.addEventListener('submit', async (event) => {
         document.body.removeChild(a);
 
         // แสดงสถานะสำเร็จ
-        alert('ดาวน์โหลดเสร็จสิ้น');
+        notyf.success({message: 'ดาวน์โหลดเสร็จสิ้น',
+            position: {x: 'left',y:'bottom'},
+            duration: 5000
+        });
     }
     catch (error) {
-        // console.error('Error:', error);
-        alert(error.message || "เกิดข้อผิดพลาดในการดาวน์โหลด");
+        // notyf.error({message: error || "เกิดข้อผิดพลาดในการดาวน์โหลด"}
+        console.log(error);
     }
     finally {
         // คืนสถานะปุ่มเป็นปกติ
@@ -86,7 +91,9 @@ downloadForm.addEventListener('submit', async (event) => {
     }
 }
     else {
-        alert("จำนวนรูปที่ต้องการดาวโหลดต้องไม่เกิน 100 รูป และจํานวนรูปต้องไม่มากกว่า 5 รูป");
+        notyf.error({
+            message: "จำนวนรูปห้ามต้องไม่เกิน 100 รูป",
+    });
         btnSubmit.disabled = false;
         btnSubmit.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

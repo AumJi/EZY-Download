@@ -8,7 +8,7 @@
     <!-- ในส่วน head เพิ่ม -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.19/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap');
 
@@ -71,10 +71,10 @@
                         </div>
                         <input type="text" id="image-name" placeholder="เช่น sunset, portrait, my-image..."
                             class="input input-bordered w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300"
-                            required />
+                            autocomplete="off" required />
                     </div>
 
-                    <div class="form-control">
+                    <div class="form-control" >
                         <div class="flex justify-between items-center">
                             <label class="label pl-0" for="file-extension">
                                 <span class="label-text font-medium text-gray-700">นามสกุลไฟล์</span>
@@ -93,7 +93,7 @@
 
                         <select id="file-extension"
                             class="select select-bordered w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-300 mt-2"
-                            required>
+                            autocomplete="off" required>
                             <option value="" disabled selected>เลือกนามสกุลไฟล์</option>
                             <script>
                                 const supportedExtensions = ['.jpg', '.png', '.gif', '.webp', '.svg', 'สกุลไฟล์ต้นฉบับ'];
@@ -120,8 +120,8 @@
                             <span id="count-display" class="text-gray-700 font-medium">1 ไฟล์</span>
                         </div>
                         <input type="range" id="download-count" min="1" max="20" value="1" 
-                            class="range range-primary range-sm" />
-                        <div class="w-full flex justify-between text-xs px-2 text-gray-500">
+                            class="range range-primary range-sm" autocomplete="off"/>
+                        <div class="w-full flex justify-between text-xs px-2 text-gray-500 ">
                             <span>1</span>
                             <span>5</span>
                             <span>10</span>
@@ -152,7 +152,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="mt-8 text-center text-gray-500 text-sm">
         <p>© 2023 EZY-Download. สงวนลิขสิทธิ์.</p>
     </div>
@@ -178,6 +178,6 @@
             document.documentElement.setAttribute('data-theme', 'dark');
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 </body>
-
 </html>

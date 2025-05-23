@@ -11,16 +11,16 @@ import os, io
 app = FastAPI()
 
 # CORS: กลไกความปลอดภัยของเบราว์เซอร์ ที่ควบคุมการสื่อสารระหว่าง Frontend และ Backend เมื่ออยู่คนละโดเมน
-origins = [
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
-    "http://localhost:3000",
-    "http://127.0.0.1:8000",
-]
+# origins = [
+#     "http://localhost:5501",
+#     "http://127.0.0.1:5501",
+#     "http://localhost:3000",
+#     "http://127.0.0.1:8000",
+# ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     # allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
@@ -76,7 +76,7 @@ DOWNLOAD_DIR = "./backend/app/storage/temp_download"
 DOWNLOAD_ZIP = "./backend/app/storage/download.zip"
 
 @app.post("/api/download")
-def download_images(request: Item):    
+def download_images(request: Item):
         try:
             if os.listdir(STORAGE_PATH):
                 shutil.rmtree(STORAGE_PATH)
