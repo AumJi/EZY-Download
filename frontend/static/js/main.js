@@ -28,7 +28,7 @@ downloadForm.addEventListener('submit', async (event) => {
     if (data.title.replace(" ", "").split(",").length * data.amount <= 100
   ) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/download', {
+        const response = await fetch('/api/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
