@@ -1,7 +1,10 @@
 # uvicorn backend.app.main:app --reload
-from fastapi import FastAPI , Response, HTTPException
+from fastapi import FastAPI , Response, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 from typing import Union
 from pydantic import BaseModel
 from bing_image_downloader import downloader
@@ -10,22 +13,16 @@ import os, io
 
 app = FastAPI()
 
-# CORS: กลไกความปลอดภัยของเบราว์เซอร์ ที่ควบคุมการสื่อสารระหว่าง Frontend และ Backend เมื่ออยู่คนละโดเมน
-# origins = [
-#     "http://localhost:5501",
-#     "http://127.0.0.1:5501",
-#     "http://localhost:3000",
-#     "http://127.0.0.1:8000",
-# ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    # allow_credentials=True,
+    allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
 
+app.mount('/static', StaticFiles(directory='./frontend/static'), name='static')
+templates = Jinja2Templates(directory='./frontend/static')
 
 class Item(BaseModel):
     title : str
@@ -68,12 +65,15 @@ def zipdir(path, ziph):
                        os.path.relpath(os.path.join(root, file), 
                                        os.path.join(path, '..')))
 
-
-
 # ตั้งค่าโฟลเดอร์ดาวน์โหลด
 STORAGE_PATH = "./backend/app/storage"
 DOWNLOAD_DIR = "./backend/app/storage/temp_download"
 DOWNLOAD_ZIP = "./backend/app/storage/download.zip"
+
+@app.get('/',response_class=HTMLResponse)
+async def root(request:Request):
+    print(request)
+    return templates.TemplateResponse('index.html',{'request':request})
 
 @app.post("/api/download")
 def download_images(request: Item):
@@ -108,6 +108,7 @@ def download_images(request: Item):
 
 @app.get("/hello")
 async def read_root():
+    
     return {
         "message": "Welcome to EXY-Download API",
         "version": "1.0",
